@@ -16,7 +16,6 @@ class PostList(ListCreateAPIView):
     def get_queryset(self):
         return Post.objects.filter(owner=self.request.user)
 
-
 class PostDetailView(RetrieveUpdateDestroyAPIView):
 
     permission_classes = (permissions.IsAuthenticated,)

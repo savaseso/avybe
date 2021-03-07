@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.generics import GenericAPIView
 from .serializers import UserSerializer, LoginSerializer
 from django.contrib.auth.models import User
-
+from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
@@ -50,5 +50,15 @@ class LoginView(GenericAPIView):
 
             return Response(data, status=status.HTTP_200_OK)
 
-            # SEND RES
         return Response({'success': False, 'message': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+class IsAuthView(GenericAPIView):
+
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, format=None):
+        if permissions.IsAuthenticated:
+            return Response({'success': True},status=status.HTTP_200_OK)
+    
+
