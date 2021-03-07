@@ -11,6 +11,7 @@ from django.conf import settings
 from django.contrib import auth
 import jwt
 import logging
+from decouple import config
 
 
 class RegisterView(GenericAPIView):
@@ -25,7 +26,7 @@ class RegisterView(GenericAPIView):
             username = data.get('username', '')
             auth_token = jwt.encode(
                 {'username': username
-                 }, 'secretkey', algorithm="HS256")
+                 }, config("JWT_SECRET_KEY"), algorithm="HS256")
             return Response({'data': serializer.data, 'token': auth_token}, status.HTTP_201_CREATED)
         return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
@@ -42,7 +43,7 @@ class LoginView(GenericAPIView):
         if user:
             auth_token = jwt.encode(
                 {'username': user.username
-                 }, 'secretkey', algorithm="HS256")
+                 }, config("JWT_SECRET_KEY"), algorithm="HS256")
 
             serializer = UserSerializer(user)
 

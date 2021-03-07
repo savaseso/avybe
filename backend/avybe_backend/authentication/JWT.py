@@ -2,6 +2,7 @@ from rest_framework import authentication, exceptions
 from django.conf import settings
 from django.contrib.auth.models import User
 import jwt
+from decouple import config
 
 
 class JWTAuthentication(authentication.BaseAuthentication):
@@ -12,7 +13,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
             return None
         prefix, token = auth_data.decode('utf-8').split(' ')
         try:
-            payload = jwt.decode(token, 'secretkey', algorithms="HS256")
+            payload = jwt.decode(token, config("JWT_SECRET_KEY"), algorithms="HS256")
 
             user = User.objects.get(username=payload['username'])
             return (user, token)
