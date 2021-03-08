@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+from decouple import config
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -40,7 +42,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'authentication',
     'posts',
+    'cloudinary_storage',
     'corsheaders',
+
 ]
 
 REST_FRAMEWORK = {
@@ -86,12 +90,12 @@ WSGI_APPLICATION = 'avybe_backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'avybe',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'localhost',
-        'PORT': '5432'
+        'ENGINE': config("POSTGRES_ENGINE"),
+        'NAME':config("POSTGRES_NAME"),
+        'USER': config("POSTGRES_USER"),
+        'PASSWORD':config("POSTGRES_PASSWORD"),
+        'HOST': config("POSTGRES_HOST"),
+        'PORT': config("POSTGRES_PORT")
     }
 }
 
@@ -140,8 +144,6 @@ CORS_ALLOWED_ORIGINS = [
 
 ]
 
-# JWT
-JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
 
 
 STATIC_URL = '/static/'
@@ -153,3 +155,12 @@ STATICFILES_DIRS = [
 ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
+
+# CLOUDINARY STORAGE
+
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME':config("CLOUDINARY_CLOUD_NAME"),
+    'API_KEY':config("CLOUDINARY_API_KEY"),
+    'API_SECRET':config("CLOUDINARY_API_SECRET")
+}
